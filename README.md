@@ -1,6 +1,9 @@
-# js13k-2023
+# js13k-2023 Ranger Dawn
 
-JS13K 2023
+Ranger Dawn (JS13K 2023) is a sequel to Ranger Down, our entry to JS13K 2018
+
+Or maybe a prequel, hence "Dawn" - not sure - will probably rename once theme is
+announced and we write the story etc.
 
 We are going to write a sequel to our previous entry, and do the ol' switcheroo.
 
@@ -11,7 +14,7 @@ gfx for a short time until they get their first "upgrade" - surprise, it's not
 Ranger 2018 - now we can diverge into a new storyline based on this year's theme
 
 We won't start story and gameplay until we get the theme, but we can set up the 
-engine and etc
+engine and etc, potentially even the RD18 segment for the intro switcheroo
 
 Last time we ran out of time long before we ran out of bytes, so let's give 
 ourselves a better chance by setting up early and doing the engine work
@@ -44,4 +47,8 @@ same order, that'll be fun
 - "draw font to canvas"  
   did it pretty bare bones, but we can improve later
   6530 used, 6782 left
-  
+
+- "generate a map with grass placed randomly, some trees"
+  ok let's go make a map type then fill it with 75% grass and 25% trees
+  we made a potato map with just grass and trees
+  6606 used, 6706 left

@@ -1,4 +1,5 @@
 import { FONTSIZE, LANDSCAPE, PORTRAIT, SQUARE, VMIN } from './const.js'
+import { potatoMap } from './map.js'
 
 declare const c: HTMLCanvasElement
 declare const l: HTMLImageElement // loader
@@ -29,14 +30,18 @@ const tick = (_time: number) => {
       ctx.fillRect(x, y, 1, 1)
     }
   }
+  
+  let i = 65
 
   for( let rows = 0; rows < ~~( c.height / FONTSIZE ); rows++ ) {
     // only draw left half of screen
     for( let cols = 0; cols < ~~( c.width / FONTSIZE / 2 ); cols++ ) {
-      const charsInFont = ~~( fontSprite.width / FONTSIZE )
-      const charCode = ~~(Math.random() * charsInFont) + 32
+      drawChar(i, cols, rows)
 
-      drawChar(charCode, cols, rows)
+      i++
+
+      // repeat the uppercase alphabet and wrap around
+      if( i > 90  ) i = 65
     }
   }
 
@@ -44,13 +49,15 @@ const tick = (_time: number) => {
 }
 
 let fontSprite: HTMLImageElement
+let map = potatoMap(VMIN,VMIN)
+
+// temp
+console.log( map )
 
 const drawChar = (charCode: number, col: number, row: number) => {
   // our sprite starts at 32
-  charCode -= 32
-
   // the sprite is FONTSIZE high
-  const x = charCode * FONTSIZE
+  const x = ( charCode - 32 ) * FONTSIZE
 
   ctx.drawImage(
     fontSprite,
