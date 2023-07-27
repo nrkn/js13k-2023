@@ -40,3 +40,7 @@ same order, that'll be fun
   but we will treat our size eg 160px as the min side and have aspect ratio 
   support (we can override this when pretending to be RD18)
   6381 used, 6931 left
+
+- "draw font to canvas"  
+  did it pretty bare bones, but we can improve later
+  6530 used, 6782 left
