@@ -1,0 +1,23 @@
+{
+  "name": "js13k-2023",
+  "version": "0.0.1",
+  "description": "JS13K 2023",
+  "main": "./dist/index.js",
+  "type": "module",
+  "scripts": {
+    "zip": "7z a ./data/zipped/dist.zip ./data/www/*",
+    "build": "rimraf dist && tsc && webpack ./dist/index.js -o ./data/www && npm run zip",    
+    "start": "npm run build && http-server ./data/www"
+  }, 
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nrkn/js13k-2023.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nrkn/js13k-2023/issues"
+  },
+  "homepage": "https://github.com/nrkn/js13k-2023#readme"
+}
