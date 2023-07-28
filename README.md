@@ -67,4 +67,7 @@ same order, that'll be fun
   expected to blow the bytes out a bit, but for it to easier to work on, but 
   instead we saved a few bytes lol
   6867 used, 6445 left
-    
+
+- "player animates"
+  ok, pretty crude like RD18, improve later
+  6908 used, 6404 left

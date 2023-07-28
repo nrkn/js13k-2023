@@ -1,11 +1,11 @@
-import { VMIN, TILESIZE, FONTSIZE } from './constants/config.js'
+import { VMIN, TILESIZE, FONTSIZE, ANIMTIME } from './constants/config.js'
 import { resize, vh, vw } from './host/aspect-ratio.js'
 import { updateCamera } from './host/camera.js'
 import { cls, drawAt } from './host/drawing.js'
 import { loadImage } from './host/load-image.js'
 import { potatoMap } from './map/potato.js'
 
-const drawMap = ( _time: number ) => {
+const drawMap = () => {
   const [
     mapColsW, mapRowsH, mapRow, mapCol, mapX, mapY
   ] = updateCamera(playerCol, playerRow, vw(), vh() )
@@ -32,7 +32,7 @@ const drawMap = ( _time: number ) => {
   }
 }
 
-const drawHud = ( _time: number ) => {
+const drawHud = () => {
   // placeholder, just overlay a title top left
   const t = 'RANGER'
 
@@ -43,23 +43,38 @@ const drawHud = ( _time: number ) => {
   }
 }
 
-const drawSprites = ( _time: number ) => {
+const drawSprites = () => {
   // now draw player
   drawSpriteAt(
-    0,
+    0 + animFrame,
     Math.floor(vw() / 2 - TILESIZE / 2),
     Math.floor(vh() / 2 - TILESIZE / 2)
   )
 }
 
-const tick = (_time: number) => {
+let firstTime = 0
+let elapsed = 0
+let animFrame: 0 | 1 = 0
+
+const advance = ( time: number ) => {
+  if( !firstTime ){
+    firstTime = time
+  }
+
+  elapsed = time - firstTime
+
+  animFrame = Math.floor(elapsed / ANIMTIME) % 2 as 0 | 1
+}
+
+const tick = (time: number) => {
+  advance( time )
   // todo: update game logic here
 
   cls()
 
-  drawMap(_time)
-  drawHud(_time)
-  drawSprites(_time)
+  drawMap()
+  drawHud()
+  drawSprites()
 
   requestAnimationFrame(tick)
 }
