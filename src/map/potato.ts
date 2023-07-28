@@ -1,15 +1,9 @@
-export type GridData<T = number> = [
-  width: number, height: number, data: T[]
-]
-
-export type MapTile = [tileIndex: number]
-
-export type Map = GridData<MapTile>
+import { MapTile, MapGrid } from './types.js'
 
 // 75% grass and 25% trees
 // grass is indices 3 thru 8 I think
 // trees are 9 thru 12
-export const potatoMap = (width: number, height: number): Map => {
+export const potatoMap = (width: number, height: number): MapGrid => {
   const data: MapTile[] = []
 
   for (let y = 0; y < height; y++) {

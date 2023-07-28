@@ -62,3 +62,9 @@ same order, that'll be fun
   map is drawn such that there is a row and col in center, eg odd on vmin 
   (and vmax???) and 2. the player is drawn on that center tile
   6871 used, 6441 left
+
+- put aside old dev log briefly to do a tidy up and refactor
+  expected to blow the bytes out a bit, but for it to easier to work on, but 
+  instead we saved a few bytes lol
+  6867 used, 6445 left
+    

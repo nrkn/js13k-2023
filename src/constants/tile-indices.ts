@@ -1,19 +1,3 @@
-// config style consts - potentially to become state
-
-export const VMIN = 160
-
-export const FONTSIZE = 8
-
-export const TILESIZE = 16
-
-// enum style consts - eg as discriminators
-
-export const SQUARE = 0
-export const LANDSCAPE = 1
-export const PORTRAIT = 2
-
-// indice consts - known indices 
-
 // start tiles
 
 // _0, _1 - anim suffixes
