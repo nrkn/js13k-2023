@@ -1,6 +1,9 @@
 export default {
   mode: 'production',
-  performance: {
-    hints: false
-  }
+  devtool: false
+  //mode: 'development',
+  //devtool: 'source-map',
+  // performance: {
+  //   hints: false
+  // }
 }

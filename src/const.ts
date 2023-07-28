@@ -7,3 +7,5 @@ export const LANDSCAPE = 1
 export const PORTRAIT = 2
 
 export const FONTSIZE = 8
+
+export const TILESIZE = 16

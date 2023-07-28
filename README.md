@@ -52,3 +52,7 @@ same order, that'll be fun
   ok let's go make a map type then fill it with 75% grass and 25% trees
   we made a potato map with just grass and trees
   6606 used, 6706 left
+
+- "draw map"
+  ok we'll blit the map to the canvas, we will just offset from 0,0 for now
+  6668 used, 6644 left
