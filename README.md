@@ -56,3 +56,9 @@ same order, that'll be fun
 - "draw map"
   ok we'll blit the map to the canvas, we will just offset from 0,0 for now
   6668 used, 6644 left
+
+- "draw player"
+  ok we now need to add our settings etc for the viewport so we can get 1. the 
+  map is drawn such that there is a row and col in center, eg odd on vmin 
+  (and vmax???) and 2. the player is drawn on that center tile
+  6871 used, 6441 left
