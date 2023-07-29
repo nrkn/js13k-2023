@@ -72,6 +72,13 @@ same order, that'll be fun
   ok, pretty crude like RD18, improve later
   6908 used, 6404 left
 
+## 29/07/2023
+
 - "player can move around with arrows or tap, trees and edge of map block"
   do tap later, just keys
   7086 used, 6226 left
+
+- consolidate all assets into a single file, update code
+  nb we lost alpha on sprites - but we kept a 1bpp mask in the sprite sheet
+  so we just need to write some code
+  4353 used, 8960 left

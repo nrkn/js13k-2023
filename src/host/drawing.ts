@@ -7,12 +7,12 @@ const ctx = c.getContext('2d')!
 export const drawAt = (
   sheet: HTMLImageElement,
   w: number, h: number,
-  sx: number,
+  sx: number, sy: number,
   dx: number, dy: number
 ) =>
   ctx.drawImage(
     sheet,
-    sx, 0, w, h,
+    sx, sy, w, h,
     dx, dy, w, h
   )
 

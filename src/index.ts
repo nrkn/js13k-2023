@@ -1,5 +1,6 @@
 import { VMIN, TILESIZE, FONTSIZE, ANIMTIME, MOVETIME } from './constants/config.js'
-import { T_TREE_END, T_TREE_START } from './constants/tile-indices.js'
+import { SH_FONT, SH_SPRITES, SH_TILES } from './constants/sheet-indices.js'
+import { T_BLOCKING_END, T_TREE_END, T_TREE_START } from './constants/tile-indices.js'
 import { resize, vh, vw } from './host/aspect-ratio.js'
 import { updateCamera } from './host/camera.js'
 import { cls, drawAt } from './host/drawing.js'
@@ -101,7 +102,7 @@ const update = () => {
   // we are currently using potato map, so trees are 9-12
   const mapTile = map[2][playerRow * map[0] + playerCol][0]
 
-  if( mapTile >= T_TREE_START && mapTile <= T_TREE_END ){
+  if( mapTile <= T_BLOCKING_END ){
     playerCol = oc
     playerRow = or
   }
@@ -128,24 +129,36 @@ const tick = (time: number) => {
 // when we add smooth pixel movement we will add a playerX and playerY
 let playerCol = 0
 let playerRow = 0
-let fontSprites: HTMLImageElement
-let tileSprites: HTMLImageElement
-let sprites: HTMLImageElement
+let sheet: HTMLImageElement
 let map = potatoMap(VMIN, VMIN)
 
 const drawCharAt = (charCode: number, x: number, y: number) =>
-  drawAt(fontSprites, FONTSIZE, FONTSIZE, (charCode - 32) * FONTSIZE, x, y)
+  drawAt(
+    sheet, 
+    FONTSIZE, FONTSIZE, 
+    (charCode - 32) * FONTSIZE, SH_FONT,
+    x, y
+  )
 
 const drawTileAt = (tileIndex: number, x: number, y: number) =>
-  drawAt(tileSprites, TILESIZE, TILESIZE, tileIndex * TILESIZE, x, y)
+  drawAt(
+    sheet, 
+    TILESIZE, TILESIZE, 
+    tileIndex * TILESIZE, SH_TILES,
+    x, y
+  )
 
+// todo we now have masks instead of alpha  
 const drawSpriteAt = (tileIndex: number, x: number, y: number) =>
-  drawAt(sprites, TILESIZE, TILESIZE, tileIndex * TILESIZE, x, y)
+  drawAt(
+    sheet, 
+    TILESIZE, TILESIZE, 
+    tileIndex * TILESIZE, SH_SPRITES,
+    x, y
+  )
 
 const start = async () => {
-  fontSprites = await loadImage('f.gif')
-  sprites = await loadImage('p.gif')
-  tileSprites = await loadImage('t.gif')
+  sheet = await loadImage('a.png')
 
   // debug - when game is running we will set these to somewhere in map,
   // but for now just the center tile 

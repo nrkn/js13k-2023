@@ -6,9 +6,9 @@
   "type": "module",
   "scripts": {
     "zip": "7z a ./data/zipped/dist.zip ./data/www/*",
-    "build": "rimraf dist && tsc && webpack ./dist/index.js -o ./data/www && npm run zip",    
+    "build": "rimraf dist && tsc && webpack ./dist/index.js -o ./data/www && npm run zip",
     "start": "npm run build && http-server ./data/www"
-  }, 
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nrkn/js13k-2023.git"
