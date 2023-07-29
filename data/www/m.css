@@ -6,7 +6,9 @@ body {
   margin: 0;
 }
 
-*, *:before, *:after {
+*,
+*:before,
+*:after {
   box-sizing: inherit;
 }
 
@@ -21,4 +23,9 @@ canvas {
 
 #l {
   display: none;
+}
+
+.n {
+  filter:
+    contrast(60%) brightness(30%) sepia(60%) saturate(666%) hue-rotate(190deg);
 }

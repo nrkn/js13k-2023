@@ -86,4 +86,10 @@ same order, that'll be fun
 - "implement messages"
   we did it very basic but structured it so we can expand it later
   4560 used, 8753 left
-  
+
+- "implement day/night cycle"
+  we were a bit light on detail last time - here's what we did:
+  - added days, hours, minutes, and advance them on player action by 1min
+  - added the current time to hud
+  - added a css class to toggle "night" effect  
+  4766 used, 8547 left
