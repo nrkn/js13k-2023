@@ -1,3 +1,7 @@
+import { 
+  T_GRASS_SIZE, T_GRASS_START, T_TREE_SIZE, T_TREE_START 
+} from '../constants/tile-indices.js'
+
 import { MapTile, MapGrid } from './types.js'
 
 // 75% grass and 25% trees
@@ -10,12 +14,13 @@ export const potatoMap = (width: number, height: number): MapGrid => {
     for (let x = 0; x < width; x++) {
       const r = Math.random()
       
-      const i = (
-        Math.floor(Math.random() * (r < 0.25 ? 4 : 6)) +
-        (r < 0.25 ? 9 : 3)
-      )
+      const isGrass = r < 0.75
 
-      data.push([i])
+      const offset = isGrass ? T_GRASS_START : T_TREE_START
+      const size = isGrass ? T_GRASS_SIZE : T_TREE_SIZE
+      const variant = Math.floor(Math.random() * size) + offset
+
+      data.push([variant])
     }
   }
 

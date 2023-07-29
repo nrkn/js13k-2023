@@ -71,3 +71,7 @@ same order, that'll be fun
 - "player animates"
   ok, pretty crude like RD18, improve later
   6908 used, 6404 left
+
+- "player can move around with arrows or tap, trees and edge of map block"
+  do tap later, just keys
+  7086 used, 6226 left

@@ -1,7 +1,9 @@
-import { VMIN, TILESIZE, FONTSIZE, ANIMTIME } from './constants/config.js'
+import { VMIN, TILESIZE, FONTSIZE, ANIMTIME, MOVETIME } from './constants/config.js'
+import { T_TREE_END, T_TREE_START } from './constants/tile-indices.js'
 import { resize, vh, vw } from './host/aspect-ratio.js'
 import { updateCamera } from './host/camera.js'
 import { cls, drawAt } from './host/drawing.js'
+import { isDown, isLeft, isRight, isUp } from './host/input.js'
 import { loadImage } from './host/load-image.js'
 import { potatoMap } from './map/potato.js'
 
@@ -66,9 +68,50 @@ const advance = ( time: number ) => {
   animFrame = Math.floor(elapsed / ANIMTIME) % 2 as 0 | 1
 }
 
+let moveCooldown = 0
+let oc 
+let or 
+
+const update = () => {
+  const isMoveWarm = elapsed - moveCooldown > MOVETIME
+
+  oc = playerCol
+  or = playerRow
+
+  if( isUp() && isMoveWarm ){
+    playerRow--
+    moveCooldown = elapsed
+  }
+
+  if( isDown() && isMoveWarm ){
+    playerRow++
+    moveCooldown = elapsed
+  }
+
+  if( isLeft() && isMoveWarm ){
+    playerCol--
+    moveCooldown = elapsed
+  }
+
+  if( isRight() && isMoveWarm ){
+    playerCol++
+    moveCooldown = elapsed
+  }
+
+  // we are currently using potato map, so trees are 9-12
+  const mapTile = map[2][playerRow * map[0] + playerCol][0]
+
+  if( mapTile >= T_TREE_START && mapTile <= T_TREE_END ){
+    playerCol = oc
+    playerRow = or
+  }
+}
+
 const tick = (time: number) => {
   advance( time )
+  
   // todo: update game logic here
+  update()
 
   cls()
 
