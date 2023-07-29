@@ -9,3 +9,4 @@ export const A_UP = 1
 export const A_DOWN = 2
 export const A_LEFT = 3
 export const A_RIGHT = 4
+export const A_EXIT = 5

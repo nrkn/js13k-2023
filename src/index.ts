@@ -1,17 +1,18 @@
 import { VMIN, TILESIZE, FONTSIZE, ANIMTIME, MOVETIME } from './constants/config.js'
+import { SCENE_MAP, SCENE_MESSAGE } from './constants/scenes.js'
 import { SH_FONT, SH_SPRITES, SH_TILES } from './constants/sheet-indices.js'
 import { T_BLOCKING_END, T_TREE_END, T_TREE_START } from './constants/tile-indices.js'
 import { resize, vh, vw } from './host/aspect-ratio.js'
 import { updateCamera } from './host/camera.js'
 import { cls, drawAt } from './host/drawing.js'
-import { isDown, isLeft, isRight, isUp } from './host/input.js'
+import { isDown, isExit, isLeft, isRight, isUp } from './host/input.js'
 import { loadImage } from './host/load-image.js'
 import { potatoMap } from './map/potato.js'
 
 const drawMap = () => {
   const [
     mapColsW, mapRowsH, mapRow, mapCol, mapX, mapY
-  ] = updateCamera(playerCol, playerRow, vw(), vh() )
+  ] = updateCamera(playerCol, playerRow, vw(), vh())
 
   const [mw, mh, md] = map
 
@@ -26,7 +27,7 @@ const drawMap = () => {
 
       const t = md[row * mw + col][0]
 
-      drawTileAt(t, dx, dy)      
+      drawTileAt(t, dx, dy)
 
       dx += TILESIZE
     }
@@ -59,8 +60,8 @@ let firstTime = 0
 let elapsed = 0
 let animFrame: 0 | 1 = 0
 
-const advance = ( time: number ) => {
-  if( !firstTime ){
+const advance = (time: number) => {
+  if (!firstTime) {
     firstTime = time
   }
 
@@ -70,31 +71,31 @@ const advance = ( time: number ) => {
 }
 
 let moveCooldown = 0
-let oc 
-let or 
+let oc
+let or
 
-const update = () => {
+const playerUpdateMap = () => {
   const isMoveWarm = elapsed - moveCooldown > MOVETIME
 
   oc = playerCol
   or = playerRow
 
-  if( isUp() && isMoveWarm ){
+  if (isUp() && isMoveWarm) {
     playerRow--
     moveCooldown = elapsed
   }
 
-  if( isDown() && isMoveWarm ){
+  if (isDown() && isMoveWarm) {
     playerRow++
     moveCooldown = elapsed
   }
 
-  if( isLeft() && isMoveWarm ){
+  if (isLeft() && isMoveWarm) {
     playerCol--
     moveCooldown = elapsed
   }
 
-  if( isRight() && isMoveWarm ){
+  if (isRight() && isMoveWarm) {
     playerCol++
     moveCooldown = elapsed
   }
@@ -102,23 +103,81 @@ const update = () => {
   // we are currently using potato map, so trees are 9-12
   const mapTile = map[2][playerRow * map[0] + playerCol][0]
 
-  if( mapTile <= T_BLOCKING_END ){
+  if (mapTile <= T_BLOCKING_END) {
     playerCol = oc
     playerRow = or
   }
 }
 
-const tick = (time: number) => {
-  advance( time )
-  
-  // todo: update game logic here
-  update()
+const mapTick = () => {
+  playerUpdateMap()
+  // other logic - monster et al
 
   cls()
 
   drawMap()
   drawHud()
   drawSprites()
+}
+
+// might be nice to debounce this for 500ms so they can't accidentally skip
+// - consider later when we're spending our bytes
+const playerUpdateMessage = () => {
+  if( isExit() ){
+    scene = SCENE_MAP
+  }
+}
+
+const messageTick = () => {
+  if( message.length === 0 ){
+    scene = SCENE_MAP
+  }
+
+  // we are letting it fall through, as it doesn't matter that these are run
+  // and it's cheaper for both bytes and perf not to use else, or early return
+  
+  playerUpdateMessage()
+ 
+  cls()
+
+  const hRows = Math.floor(vh() / FONTSIZE)
+  const hCols = Math.floor(vw() / FONTSIZE)
+
+  let dy = Math.floor((hRows - message.length) / 2) * FONTSIZE
+
+  for( let row = 0; row < message.length; row++ ){
+    const t = message[row]
+
+    for( let col = 0; col < t.length; col++ ){
+      const c = t.charCodeAt(col)
+
+      const dx = Math.floor((hCols - t.length) / 2) * FONTSIZE + col * FONTSIZE
+
+      drawCharAt(c, dx, dy)
+    }
+
+    dy += FONTSIZE
+  }
+}
+
+let scene = SCENE_MESSAGE
+
+let message: string[] = [
+  'Lost contact with',
+  'RANGER. Take boat',
+  'and investigate.'
+]
+
+const tick = (time: number) => {
+  advance(time)
+
+  if( scene === SCENE_MAP ){ 
+    mapTick() 
+  }
+
+  if( scene === SCENE_MESSAGE ){
+    messageTick()
+  }
 
   requestAnimationFrame(tick)
 }
@@ -134,16 +193,16 @@ let map = potatoMap(VMIN, VMIN)
 
 const drawCharAt = (charCode: number, x: number, y: number) =>
   drawAt(
-    sheet, 
-    FONTSIZE, FONTSIZE, 
+    sheet,
+    FONTSIZE, FONTSIZE,
     (charCode - 32) * FONTSIZE, SH_FONT,
     x, y
   )
 
 const drawTileAt = (tileIndex: number, x: number, y: number) =>
   drawAt(
-    sheet, 
-    TILESIZE, TILESIZE, 
+    sheet,
+    TILESIZE, TILESIZE,
     tileIndex * TILESIZE, SH_TILES,
     x, y
   )
@@ -151,8 +210,8 @@ const drawTileAt = (tileIndex: number, x: number, y: number) =>
 // todo we now have masks instead of alpha  
 const drawSpriteAt = (tileIndex: number, x: number, y: number) =>
   drawAt(
-    sheet, 
-    TILESIZE, TILESIZE, 
+    sheet,
+    TILESIZE, TILESIZE,
     tileIndex * TILESIZE, SH_SPRITES,
     x, y
   )
@@ -172,4 +231,4 @@ const start = async () => {
   requestAnimationFrame(tick)
 }
 
-start().catch( console.error )
+start().catch(console.error)

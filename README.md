@@ -82,3 +82,8 @@ same order, that'll be fun
   nb we lost alpha on sprites - but we kept a 1bpp mask in the sprite sheet
   so we just need to write some code
   4353 used, 8960 left
+
+- "implement messages"
+  we did it very basic but structured it so we can expand it later
+  4560 used, 8753 left
+  

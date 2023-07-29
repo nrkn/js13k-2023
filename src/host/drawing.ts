@@ -20,4 +20,6 @@ export const drawAt = (
 export const cls = () => {
   c.width = vw()
   c.height = vh()
+  ctx.fillStyle = '#000'
+  ctx.fillRect(0, 0, vw(), vh())
 }  
