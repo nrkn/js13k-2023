@@ -93,3 +93,6 @@ same order, that'll be fun
   - added the current time to hud
   - added a css class to toggle "night" effect  
   4766 used, 8547 left
+
+- "generate better map"
+  with pleasure!  
