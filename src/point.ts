@@ -1,8 +1,8 @@
 export type Point = [x: number, y: number]
 export type Size = [width: number, height: number]
 export type PointPredicate = (p: Point) => boolean
+export type PointAction = (p: Point) => void
 
-export type PtAction = (p: Point) => void
 export const isInBounds = ([width, height]: Size) =>
   ([x, y]: Point) =>
     x >= 0 && x < width && y >= 0 && y < height
