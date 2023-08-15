@@ -1,98 +1,120 @@
-# js13k-2023 Ranger Dawn
+# js13k-2023 13th Century
 
-Ranger Dawn (JS13K 2023) is a sequel to Ranger Down, our entry to JS13K 2018
+## story
 
-Or maybe a prequel, hence "Dawn" - not sure - will probably rename once theme is
-announced and we write the story etc.
+Set in 13th Century (prior to 1250CE)
 
-We are going to write a sequel to our previous entry, and do the ol' switcheroo.
+island settlers
 
-We will show a fancy intro scene using our new gfx, but then static, an error
-message, and the gfx revert to previous Ranger Down game - but with a new
-cutscene etc - copy over the ideas from other doc - player sees old 
-gfx for a short time until they get their first "upgrade" - surprise, it's not 
-Ranger 2018 - now we can diverge into a new storyline based on this year's theme
+your homeland is suffering considerable overpopulation and political strife
 
-We won't start story and gameplay until we get the theme, but we can set up the 
-engine and etc, potentially even the RD18 segment for the intro switcheroo
+you need to gather the knowledge, materials, people and resources to strike out
+across the vast ocean and find a new home
 
-Last time we ran out of time long before we ran out of bytes, so let's give 
-ourselves a better chance by setting up early and doing the engine work
+at your new home you will need to start a house of learning or wisdom to help
+retain the knowledge of your people, among other goals like clearing land for 
+cultivation
 
-Just for fun, we will rewrite the old ranger engine using just our gfx and 
-readme from last time, but we won't look at the code, it was very 
-imperative-style golfed and I want to see if we can do it more functionally and 
-still get similar savings
+then you get a final "score", a little story about how your people fare in the
+new land, depending on your choices
 
-We will use the old dev log and implement the engine features in roughly the
-same order, that'll be fun
+vaguely structured along lines of eg Oregon Trail
 
-# log
+## gameplay
 
-## 28/07/2023
+- top down, 2d, tile based (but pixel movement) 
+- movement with controller, touch, keyboard (direct control or click to walk to)
+- but also a lot of autopilot eg in engine cut scenes
 
-- pre setup boilerplate etc 
-  0 used, 13312 left  
+### character
 
-- minimal boilerplate
-  index.html - tsconfig.json - webpack etc - old ranger gfx
-  5872 used, 7440 left
+you choose yourself, are you a navigator, priest, chief, fisher etc,
+maybe from a randomized pool of characters
 
-- old dev log starts here
-  "pixels scaled as big as possible centered in viewport"
-  but we will treat our size eg 160px as the min side and have aspect ratio 
-  support (we can override this when pretending to be RD18)
-  6381 used, 6931 left
+randomize: 
 
-- "draw font to canvas"  
-  did it pretty bare bones, but we can improve later
-  6530 used, 6782 left
+head and body height and width
+skin color:
+  0 e0 ba 95, 0.33 bf 8e 68, 0.66 9b 64 3d, 1 59 44 39
+  sample with Math.random()
 
-- "generate a map with grass placed randomly, some trees"
-  ok let's go make a map type then fill it with 75% grass and 25% trees
-  we made a potato map with just grass and trees
-  6606 used, 6706 left
+### join
 
-- "draw map"
-  ok we'll blit the map to the canvas, we will just offset from 0,0 for now
-  6668 used, 6644 left
+you need to convince people to join you - how mechanic work? or do you just 
+walk around and talk to people, and then decide who to invite?
 
-- "draw player"
-  ok we now need to add our settings etc for the viewport so we can get 1. the 
-  map is drawn such that there is a row and col in center, eg odd on vmin 
-  (and vmax???) and 2. the player is drawn on that center tile
-  6871 used, 6441 left
+### gods
 
-- put aside old dev log briefly to do a tidy up and refactor
-  expected to blow the bytes out a bit, but for it to easier to work on, but 
-  instead we saved a few bytes lol
-  6867 used, 6445 left
+people, especially priests of craftspeople may be able to bring their gods with
+them, in the form of tapa, statues etc, these may help during random journey
+events, or they may even be more complex and have pros and cons
 
-- "player animates"
-  ok, pretty crude like RD18, improve later
-  6908 used, 6404 left
+### barter
 
-## 29/07/2023
+once you have your party you can barter the resources you have for the resources
+you want
 
-- "player can move around with arrows or tap, trees and edge of map block"
-  do tap later, just keys
-  7086 used, 6226 left
+### inventory screen 
 
-- consolidate all assets into a single file, update code
-  nb we lost alpha on sprites - but we kept a 1bpp mask in the sprite sheet
-  so we just need to write some code
-  4353 used, 8960 left
+people, skills, resources, gods
 
-- "implement messages"
-  we did it very basic but structured it so we can expand it later
-  4560 used, 8753 left
+each person has a color (ROYBGIV or similar), then you have bars for total 
+skills, with each bar showing how much each person contributes, same for 
+resources
 
-- "implement day/night cycle"
-  we were a bit light on detail last time - here's what we did:
-  - added days, hours, minutes, and advance them on player action by 1min
-  - added the current time to hud
-  - added a css class to toggle "night" effect  
-  4766 used, 8547 left
+### stage 1
 
-- "generate better map"
-  with pleasure!  
+gather your people and resources
+
+#### raw materials
+
+- wood
+- stone
+- vegetable fibre 
+- shell 
+- bone
+
+#### food
+
+- fish
+- rats
+- chicken
+- kumara
+- taro
+- breadfruit
+- banana
+- coconut
+- yams
+- sugarcane
+
+#### people
+
+who do you take?
+
+you need:
+a navigator
+a priest
+
+then who else you take is up to you, but some people may have resources but
+no skills, or skills and no resources, or some combination
+
+#### roles/classes
+
+### stage 2 
+
+the journey
+
+random events with some choices, and some things playing out according to your
+skills and resources
+
+you have to balance food/animals for eating on the trip, and for starting your 
+new settlement with
+
+### stage 3
+
+the new land
+
+you can set up your new home, but may have lost some people or skills or
+resources along the way
+
+you get a little story about how your people fare in the new land

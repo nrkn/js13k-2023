@@ -1,7 +1,7 @@
 import { VMIN, TILESIZE, FONTSIZE, ANIMTIME, MOVETIME } from './constants/config.js'
 import { SCENE_MAP, SCENE_MESSAGE } from './constants/scenes.js'
 import { SH_FONT, SH_SPRITES, SH_TILES } from './constants/sheet-indices.js'
-import { T_BLOCKING_END, T_TREE_END, T_TREE_START } from './constants/tile-indices.js'
+import { T_BLOCKING_END } from './constants/tile-indices.js'
 import { resize, vh, vw } from './host/aspect-ratio.js'
 import { updateCamera } from './host/camera.js'
 import { cls, drawAt } from './host/drawing.js'

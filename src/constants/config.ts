@@ -9,5 +9,3 @@ export const TILESIZE = 16
 export const ANIMTIME = 500
 export const MOVETIME = 125
 export const MESSAGETIME = 500
-
-export const LANDBORDER_PERC = 10
