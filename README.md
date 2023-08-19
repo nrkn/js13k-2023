@@ -44,3 +44,5 @@ Remaining: 12677B
 Placeholder assets (crappy, to be optimized and etc)
 Used: 7333B
 Remaining: 5339B
+
+Draw sky and mountains, ground and player
