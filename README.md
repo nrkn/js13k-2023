@@ -1,120 +1,46 @@
 # js13k-2023 13th Century
 
-## story
+OK day 7, restarting lol
 
-Set in 13th Century (prior to 1250CE)
+Prior to finding out the theme we rewrote the Ranger Down engine from our 2018 
+JS13K, intending to use that for this year's game, but when the theme was 
+announced I decided against it
 
-island settlers
+We then spent a whole week researching Polynesian seafaring in the 13th century, 
+and writing prototypes of eg ocean currents, wind, and so on, which was fun and 
+interesting, but I was struggling to find a fun core game mechanic which was 
+simple enough to implement, iterate and polish in the time allowed
 
-your homeland is suffering considerable overpopulation and political strife
+So, new idea:
 
-you need to gather the knowledge, materials, people and resources to strike out
-across the vast ocean and find a new home
+Parallax side scroller
 
-at your new home you will need to start a house of learning or wisdom to help
-retain the knowledge of your people, among other goals like clearing land for 
-cultivation
+Some kind of peasant character? Maybe they can pull a little cart?
 
-then you get a final "score", a little story about how your people fare in the
-new land, depending on your choices
+They eat turnips and pick up dog turds to sell to tanners lol
 
-vaguely structured along lines of eg Oregon Trail
+We will just make the following for now:
 
-## gameplay
+A parallax sky layer at 0.5 speed
+A parallax mountain layer at 0.75 speed
 
-- top down, 2d, tile based (but pixel movement) 
-- movement with controller, touch, keyboard (direct control or click to walk to)
-- but also a lot of autopilot eg in engine cut scenes
+Then we will have the ground and player at 1.0 speed
 
-### character
+We will use a basic entity component system, with a simple update and draw 
+loop
 
-you choose yourself, are you a navigator, priest, chief, fisher etc,
-maybe from a randomized pool of characters
+OK - go draw some assets and come back!
 
-randomize: 
+# log
 
-head and body height and width
-skin color:
-  0 e0 ba 95, 0.33 bf 8e 68, 0.66 9b 64 3d, 1 59 44 39
-  sample with Math.random()
+Nothing
+Used: 0B
+Remaining: 13312B
 
-### join
+Boilerplate
+Used: 635B
+Remaining: 12677B
 
-you need to convince people to join you - how mechanic work? or do you just 
-walk around and talk to people, and then decide who to invite?
-
-### gods
-
-people, especially priests of craftspeople may be able to bring their gods with
-them, in the form of tapa, statues etc, these may help during random journey
-events, or they may even be more complex and have pros and cons
-
-### barter
-
-once you have your party you can barter the resources you have for the resources
-you want
-
-### inventory screen 
-
-people, skills, resources, gods
-
-each person has a color (ROYBGIV or similar), then you have bars for total 
-skills, with each bar showing how much each person contributes, same for 
-resources
-
-### stage 1
-
-gather your people and resources
-
-#### raw materials
-
-- wood
-- stone
-- vegetable fibre 
-- shell 
-- bone
-
-#### food
-
-- fish
-- rats
-- chicken
-- kumara
-- taro
-- breadfruit
-- banana
-- coconut
-- yams
-- sugarcane
-
-#### people
-
-who do you take?
-
-you need:
-a navigator
-a priest
-
-then who else you take is up to you, but some people may have resources but
-no skills, or skills and no resources, or some combination
-
-#### roles/classes
-
-### stage 2 
-
-the journey
-
-random events with some choices, and some things playing out according to your
-skills and resources
-
-you have to balance food/animals for eating on the trip, and for starting your 
-new settlement with
-
-### stage 3
-
-the new land
-
-you can set up your new home, but may have lost some people or skills or
-resources along the way
-
-you get a little story about how your people fare in the new land
+Placeholder assets (crappy, to be optimized and etc)
+Used: 7333B
+Remaining: 5339B

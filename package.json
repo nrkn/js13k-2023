@@ -5,7 +5,7 @@
   "main": "./dist/index.js",
   "type": "module",
   "scripts": {
-    "zip": "7z a ./data/zipped/dist.zip ./data/www/*",
+    "zip": "rimraf ./data/zipped/dist.zip && 7z a ./data/zipped/dist.zip ./data/www/*",
     "build": "rimraf dist && tsc && webpack ./dist/index.js -o ./data/www && npm run zip",
     "start": "npm run build && http-server ./data/www"
   },
