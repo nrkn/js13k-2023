@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proto Island</title>
+  <style>
+    html {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: sans-serif;
+      margin: 0;
+    }
+
+    html, body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    *,
+    *:before,
+    *:after {
+      box-sizing: inherit;
+    }
+
+    #v {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+    }
+
+    #p {
+      flex: 1;
+      overflow: auto;
+    }
+
+    #i {
+      height: auto;      
+    }
+
+    #s {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="v">
+    <pre id="p"></pre>
+    <form id="f"><input id="i"><input id="s" type="submit"></form>
+  </div>
+  <script>
+    const cls = () => p.innerHTML = ''
+    const say = (...s) => p.append(...s)
+    
+    const ask = () => new Promise(
+      resolve => {
+        f.disabled = false
+        i.focus()
+
+        const onSubmit = e => {
+          e.preventDefault()
+          f.disabled = true
+          resolve(i.value)
+          i.value = ''
+
+          f.removeEventListener('submit', onSubmit)
+
+          return false
+        }
+
+        f.addEventListener('submit', onSubmit)
+      }
+    )
+
+    const start = async () => {
+      say( 'what is your name?\n')
+
+      const name = await ask()
+
+      say('hello ', name, '\n')
+
+      say('what is your age?\n')
+
+      const age = await ask()
+
+      say('you are ', age, ' years old\n')
+
+      say('goodbye\n')
+    }
+
+    start().catch( e => say('ERROR!', e))
+  </script>
+</body>
+
+</html>

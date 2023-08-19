@@ -1,0 +1,141 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Sea - Island Scaling</title>
+  <style>
+    html {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    *,
+    *:before,
+    *:after {
+      box-sizing: inherit;
+    }
+  </style>
+</head>
+
+<body>
+  <script>
+    /*
+    
+    OK nice try Chatty. But what we actually need is:
+
+    
+    
+    */
+  </script>
+  <script>
+    // init
+    const canvas = document.createElement('canvas')
+
+    document.body.append(canvas)
+
+    const ctx = canvas.getContext('2d')
+
+    let width = canvas.width = window.innerWidth
+    let height = canvas.height = window.innerHeight
+    let cx = width / 2
+    let cy = height / 2
+
+    addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth
+      height = canvas.height = window.innerHeight
+      cx = width / 2
+      cy = height / 2
+    })
+
+    // islands
+    const numberOfIslands = 5
+    const baseAngle = (2 * Math.PI) / numberOfIslands // Distributing in 360°
+    const islandRadius = 10
+    const maxOffset = 500 // Maximum random distance to offset an island
+
+    const islands = []
+
+    for (let i = 0; i < numberOfIslands; i++) {
+      let angle = i * baseAngle + (Math.random() - 0.5) * 0.1 // Small randomness
+      let distance = Math.random() * maxOffset + islandRadius // At least one radius away
+
+      let x = cx + distance * Math.cos(angle)
+      let y = cy + distance * Math.sin(angle)
+
+      const island = {
+        x, y, r: islandRadius
+      }
+
+      islands.push(island)
+    }
+
+    // waka
+    const wakaSize = 15
+    const wakaSpeed = 5
+    let wakaX = cx
+    let wakaY = cy
+    let wakaAngle = 0
+
+    addEventListener('keydown', e => {
+      switch (e.key) {
+        case 'ArrowUp':
+          // move forward by wakaspeed along angle
+          wakaX += wakaSpeed * Math.cos(wakaAngle)
+          break
+        case 'ArrowDown':
+          // move backward - we spun the sails - for now lol
+          wakaX -= wakaSpeed * Math.cos(wakaAngle)
+          break
+        case 'ArrowLeft':
+          wakaAngle -= 0.1
+          break
+        case 'ArrowRight':
+          wakaAngle += 0.1
+          break
+      }
+    })
+
+    const draw = () => {
+      // sea
+      ctx.fillStyle = "#0099CC" // Blue for sea
+      ctx.fillRect(0, 0, width, height)
+
+      // islands
+      ctx.fillStyle = "#00CC66" // Green for island
+      islands.forEach(island => {
+        ctx.beginPath()
+        ctx.arc(island.x, island.y, island.r, 0, 2 * Math.PI)
+        ctx.fill()
+      })
+
+      // waka
+      ctx.fillStyle = "#993333" // Brown for waka
+      ctx.fillRect(wakaX - wakaSize / 2, wakaY - wakaSize / 2, wakaSize, wakaSize)
+    }
+
+    // scale so that objects at horizon are closer together
+    const distanceToHorizon = 5
+    const scaleBy = distanceToHorizon * distanceToHorizon
+    const realToWorldDistance = r => (r * r) / scaleBy
+    const worldToRealDistance = d => Math.sqrt(scaleBy * d)
+
+    const tick = t => {
+      draw()
+
+      requestAnimationFrame(tick)
+    }
+
+    requestAnimationFrame(tick)
+  </script>
+</body>
+
+</html>

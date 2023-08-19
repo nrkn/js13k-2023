@@ -1,0 +1,167 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Sea</title>
+  <style>
+    html {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: sans-serif;
+      margin: 0;
+    }
+
+    *,
+    *:before,
+    *:after {
+      box-sizing: inherit;
+    }
+
+    body,
+    html {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    #sea {
+      width: 100vw;
+      height: 100vh;
+      object-fit: contain;
+    }
+  </style>
+</head>
+
+<body id="sky">
+  <!--
+      Just the sea
+
+      So, how our game view will work is:
+
+      we have a sky coloured background - depending on time of day
+
+      we center a circle which is 50% of vmin horizontally and vertically - this is the sea
+
+      the stars at night are drawn radially out from the sea, as though the circumference of the sea
+      were the horizon
+    -->
+  <svg id="sea" viewBox="0 0 100 100">
+    <circle cx="50" cy="50" r="33" fill="#014d4e" />
+  </svg>
+</body>
+<script defer>
+  const sky = document.getElementById('sky')
+  const sea = document.getElementById('sea')
+
+  const setSky = (
+    stops = [
+      ['blue', 0],
+      ['darkblue', 35],
+      ['black', 40]
+    ]
+  ) => {
+    sky.style.backgroundImage = `radial-gradient( circle at 50% 50%, ${stops.map(([c, p]) => `${c} ${p}%`).join(', ')})`
+  }
+
+  setSky()
+
+  const addStars = () => {
+    const numberOfStars = 50  // Change as needed
+    const minRadius = 33      // Just outside the sea
+    const maxRadius = 50      // To the edge of the SVG view
+
+    for (let i = 0; i < numberOfStars; i++) {
+      const radius = Math.random() * (maxRadius - minRadius) + minRadius
+      const angle = Math.random() * 2 * Math.PI
+
+      const cx = 50 + radius * Math.cos(angle)
+      const cy = 50 + radius * Math.sin(angle)
+
+      const star = document.createElementNS("http://www.w3.org/2000/svg", "circle")
+      star.setAttribute("cx", cx)
+      star.setAttribute("cy", cy)
+      star.setAttribute("r", 0.2)  // Change for desired star size
+      star.setAttribute("fill", "white")
+
+      sea.appendChild(star)
+    }
+  }
+
+  const addWaka = () => {
+    const wakaGroup = document.createElementNS("http://www.w3.org/2000/svg", "g")
+
+    const leftHull = document.createElementNS("http://www.w3.org/2000/svg", "line")
+
+    leftHull.setAttribute("x1", 49)
+    leftHull.setAttribute("y1", 47)
+    leftHull.setAttribute("x2", 49)
+    leftHull.setAttribute("y2", 53)
+
+    leftHull.setAttribute("stroke", "tan")
+    leftHull.setAttribute("stroke-width", 1)
+    leftHull.setAttribute("stroke-linecap", "round")
+
+    const rightHull = document.createElementNS("http://www.w3.org/2000/svg", "line")
+
+    rightHull.setAttribute("x1", 51)
+    rightHull.setAttribute("y1", 47)
+    rightHull.setAttribute("x2", 51)
+    rightHull.setAttribute("y2", 53)
+
+    rightHull.setAttribute("stroke", "tan")
+    rightHull.setAttribute("stroke-width", 1)
+    rightHull.setAttribute("stroke-linecap", "round")
+
+    const platform = document.createElementNS("http://www.w3.org/2000/svg", "rect")
+
+    platform.setAttribute("x", 48)
+    platform.setAttribute("y", 48)
+    platform.setAttribute("width", 4)
+    platform.setAttribute("height", 4)
+
+    platform.setAttribute("fill", "peru")
+
+    const leftSail = document.createElementNS("http://www.w3.org/2000/svg", "line")
+
+    leftSail.setAttribute("x1", 50)
+    leftSail.setAttribute("y1", 49)
+    leftSail.setAttribute("x2", 48)
+    leftSail.setAttribute("y2", 51)
+
+    leftSail.setAttribute("stroke", "white")
+    leftSail.setAttribute("stroke-width", 1)
+    leftSail.setAttribute("stroke-linecap", "round")
+
+    const rightSail = document.createElementNS("http://www.w3.org/2000/svg", "line")
+
+    rightSail.setAttribute("x1", 52)
+    rightSail.setAttribute("y1", 49)
+    rightSail.setAttribute("x2", 50)
+    rightSail.setAttribute("y2", 51)
+
+    rightSail.setAttribute("stroke", "white")
+    rightSail.setAttribute("stroke-width", 1)
+    rightSail.setAttribute("stroke-linecap", "round")
+
+    rightSail.setAttribute("stroke", "white")
+    rightSail.setAttribute("stroke-width", 1)
+    rightSail.setAttribute("stroke-linecap", "round")
+    
+    wakaGroup.appendChild(leftHull)
+    wakaGroup.appendChild(rightHull)
+    wakaGroup.appendChild(platform)
+    wakaGroup.appendChild(leftSail)
+    wakaGroup.appendChild(rightSail)
+
+    sea.appendChild(wakaGroup)
+  }
+
+  addStars()
+  addWaka()
+</script>
+
+</html>
