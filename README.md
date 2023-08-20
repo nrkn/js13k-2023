@@ -29,7 +29,8 @@ Then we will have the ground and player at 1.0 speed
 We will use a basic entity component system, with a simple update and draw 
 loop
 
-OK - go draw some assets and come back!
+- OK - go draw some assets and come back!
+- Drew assets!
 
 # log
 

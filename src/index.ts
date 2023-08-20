@@ -1,24 +1,60 @@
-import { loadAssets } from './lib/state/assets.js'
-
-declare const b: HTMLBodyElement
-declare const c: HTMLCanvasElement
-
-const ctx = c.getContext('2d')!
+import { ANIM_THING, STATIC_THING, TILE_BOTTOM, TILE_CENTERED } from './const.js'
+import { resize } from './host.js'
+import { keyDown, keyUp } from './io.js'
+import { loadImage, imageToFrames } from './lib/image.js'
+import { images, things } from './state.js'
+import { tick } from './tick.js'
+import { AnimThing } from './types.js'
 
 const start = async () => {
-  const assets = await loadAssets()
+  const treeImage = await loadImage('tree-100-100.png')
+  const tree2Image = await loadImage('tree2-100-100.png')
+  const gateImage = await loadImage('gate-32-64.png')
+  const girlIdleImage = await loadImage( 'girl-idle.png')
+  const girlWalkImage = await loadImage( 'girl-walk.png')
 
-  for( const key in assets ){
-    const asset = assets[key]
-
-    if( Array.isArray(asset) ){
-      asset.forEach( (frame, i) => {
-        ctx.drawImage(frame, i * 64, 0)
-      })
-    } else {
-      ctx.drawImage(asset, 0, 0)
-    }
+  images.skyImage = await loadImage('sky-800-300.png')
+  images.mountainImage = await loadImage('mountain-800-300.png')
+  images.groundImage = await loadImage('ground-64-32.png')
+  images.girlIdleFrames = imageToFrames(girlIdleImage, 4)
+  images.girlWalkFrames = imageToFrames(girlWalkImage, 6)
+ 
+  const girlAnim = {
+    idle: { frames: images.girlIdleFrames, frame: 0, duration: 1000 },
+    walk: { frames: images.girlWalkFrames, frame: 0, duration: 250 }
   }
+
+  const player: AnimThing = { 
+    type: ANIM_THING, x: 0, y: 0, image: girlAnim, anim: 'idle' 
+  }
+
+  things.push(
+    // x and y are offsets from it's tiling position eg center of world or center+bottom of screen etc
+    { type: STATIC_THING, x: 0, y: 0, image: images.skyImage, moveSpeed: 0.5, tiling: TILE_CENTERED },
+    { type: STATIC_THING, x: 0, y: 0, image: images.mountainImage, moveSpeed: 0.8, tiling: TILE_CENTERED },
+
+    { type: STATIC_THING, x: -10000, y: 0, image: gateImage, blocks: 1 },
+    { type: STATIC_THING,x: -1200, y: 0, image: treeImage }, 
+
+    { type: ANIM_THING, x: 100, y: 0, image: girlAnim, anim: 'idle', direction: -1 },
+
+    { type: STATIC_THING, x: 150, y: 2, image: tree2Image, moveSpeed: 0.95 }, 
+    { type: STATIC_THING, x: 200, y: 0, image: treeImage }, 
+    { type: STATIC_THING, x: 1400, y: 0, image: treeImage },
+
+    { type: STATIC_THING, x: 10000, y: 0, image: gateImage, blocks: 1 },
+
+    // ground
+    { type: STATIC_THING, x: 0, y: 0, image: images.groundImage, moveSpeed: 1, tiling: TILE_BOTTOM },
+
+    player
+  )
+
+  addEventListener('keydown', keyDown)
+  addEventListener('keyup', keyUp)
+
+  resize()
+  requestAnimationFrame(tick)
 }
 
 start().catch(console.error)
