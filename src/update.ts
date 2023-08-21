@@ -1,119 +1,99 @@
-import { 
-  FRICTION, skyMovementSpeed, mountainMovementSpeed, groundMovementSpeed, ANIM_THING 
+import { getImageSource } from './anim.js'
+
+import {
+  FRICTION, ANIM_THING, PLAYER_THING
 } from './const.js'
 
-import { canvas } from './host.js'
-
-import { things, timer, player, images, bgPosition } from './state.js'
-import { ImageSource } from './types.js'
+import { things, timer } from './state.js'
 
 export const update = _t => {
-  updatePlayer(_t)
-  updateBg(_t)
   updateThings(_t)
+  updateCollisions()
+
+  for (let i = 0; i < collisions.length; i++) {
+    const [a, b] = collisions[i]
+    const thingA = things[a]
+
+    if (things[a].intersects && things[b].blocks) {
+      if ( typeof thingA.speed === 'number' ) {
+        thingA.x += thingA.speed
+        thingA.speed = 0
+      }
+    }
+  }
 }
 
 const updateThings = _t => {
-  for( const t of things ){
-    if( t.type !== ANIM_THING ) continue
+  for (const t of things) {
+    if (t.type === ANIM_THING || t.type === PLAYER_THING) {
 
-    const { elapsedTime } = timer
-    const anim = t.image[ t.anim ]
-    const { duration, frames } = anim
-    const frameCount = frames.length
+      const { elapsedTime } = timer
+      const anim = t.image[t.anim]
+      const { duration, frames } = anim
+      const frameCount = frames.length
 
-    const frame = Math.floor( elapsedTime / duration * frameCount ) % frameCount
+      const frame = Math.floor(elapsedTime / duration * frameCount) % frameCount
 
-    anim.frame = frame
-  }
-}
-
-const updatePlayer = _t => {
-  const cx = canvas.width / 2
-  
-  player.speed += player.acceleration
-  player.speed *= FRICTION
-
-  if (Math.abs(player.speed) < 0.1) {
-    player.frame = 0
-  } else {
-    player.frame = (
-      Math.floor(timer.elapsedTime * Math.abs(player.speed) / 500) %
-      images.girlWalkFrames.length
-    )
-  }
-
-  player.x -= player.speed
-
-  let isIntersecting = false
-
-  for (const t of things) {  
-    if( !t.blocks ) continue
-
-    let image: ImageSource
-
-    if( t.type === ANIM_THING ){
-      const anim = t.image[ t.anim ]
-      image = anim.frames[ anim.frame]
-    } else {
-      image = t.image
+      anim.frame = frame
     }
 
-    const tDrawX = Math.floor(t.x - player.x - image.width / 2 + cx)
-    const tDrawY = canvas.height - image.height - images.groundImage.height // This assumes the thing sits just above the ground
+    if (t.speed !== undefined && t.acceleration !== undefined) {
+      t.speed += t.acceleration
+      t.speed *= FRICTION
+      t.x -= t.speed
 
-    const pRight = cx + images.girlWalkFrames[player.frame].width / 2
-    const pLeft = cx - images.girlWalkFrames[player.frame].width / 2
-    const pTop = canvas.height - images.girlWalkFrames[player.frame].height - images.groundImage.height
-    const pBottom = pTop + images.girlWalkFrames[player.frame].height
-
-    const tRight = tDrawX + image.width
-    const tLeft = tDrawX
-    const tTop = tDrawY
-    const tBottom = tTop + image.height
-
-    isIntersecting = (
-      pLeft < tRight &&
-      pRight > tLeft &&
-      pTop < tBottom &&
-      pBottom > tTop
-    )
-
-    if( isIntersecting ) break
-  }
-
-  if( isIntersecting ){
-    player.x += player.speed
-    player.speed = 0
+      if (Math.abs(t.speed) < 0.1) {
+        t.speed = 0
+        if (t.type === ANIM_THING || t.type === PLAYER_THING) {
+          t.anim = 'idle'
+        }
+      } else {
+        if (t.type === ANIM_THING || t.type === PLAYER_THING) {
+          t.anim = 'walk'
+        }
+      }
+    }
   }
 }
 
-const updateBg = _t => {
-  bgPosition.sky.x += player.speed * skyMovementSpeed
-  bgPosition.mountain.x += player.speed * mountainMovementSpeed
-  bgPosition.ground.x += player.speed * groundMovementSpeed
+export const getCollisions = () => collisions
 
-  // Reset sky position if it has completely moved out of view
-  if (bgPosition.sky.x < -images.skyImage.width) {
-    bgPosition.sky.x += images.skyImage.width
-  }
-  if (bgPosition.sky.x > images.skyImage.width) {
-    bgPosition.sky.x -= images.skyImage.width
-  }
+let collisions: [number, number][] = []
 
-  // Reset mountain position in a similar manner
-  if (bgPosition.mountain.x < -images.mountainImage.width) {
-    bgPosition.mountain.x += images.mountainImage.width
-  }
-  if (bgPosition.mountain.x > images.mountainImage.width) {
-    bgPosition.mountain.x -= images.mountainImage.width
-  }
+const updateCollisions = () => {
+  collisions = []
 
-  // Reset ground position in a similar manner
-  if (bgPosition.ground.x < -images.groundImage.width) {
-    bgPosition.ground.x += images.groundImage.width
-  }
-  if (bgPosition.ground.x > images.groundImage.width) {
-    bgPosition.ground.x -= images.groundImage.width
+  for (let a = 0; a < things.length; a++) {
+    const thingA = things[a]
+
+    if (thingA.blocks || thingA.intersects) {
+      for (let b = 0; b < things.length; b++) {
+        const thingB = things[b]
+
+        if (a !== b && (thingB.blocks || thingB.intersects)) {
+          const imageA = getImageSource(thingA)
+          const imageB = getImageSource(thingB)
+
+          const xA = thingA.x
+          const yA = thingA.y
+          const wA = imageA.width
+          const hA = imageA.height
+
+          const xB = thingB.x
+          const yB = thingB.y
+          const wB = imageB.width
+          const hB = imageB.height
+
+          if (
+            xA < xB + wB &&
+            xA + wA > xB &&
+            yA < yB + hB &&
+            yA + hA > yB
+          ) {
+            collisions.push([a, b])
+          }
+        }
+      }
+    }
   }
 }

@@ -1,4 +1,5 @@
-import { ImageSource, Thing } from './types.js'
+import { ANIM_THING, PLAYER_THING } from './const.js'
+import { Anim, AnimThing, ImageSource, Player, Thing } from './types.js'
 
 export const timer = {
   startTime: 0,
@@ -7,24 +8,9 @@ export const timer = {
   deltaTime: 0
 }
 
-export const bgPosition = {
-  sky: { x: 0, y: 0 },
-  mountain: { x: 0, y: 0 },
-  ground: { x: 0, y: 0 }
-}
-
 export const things: Thing[] = []
 
-export const player = {
-  frame: 0,
-  direction: 1,
-  speed: 0,
-  acceleration: 0,
-  x: 0,
-  y: 0
-}
-
-const emptyImage: ImageSource = new Image()
+const emptyImage = new Image() as ImageSource
 const emptyFrames: ImageSource[] = []
 
 export const images = {
@@ -35,3 +21,12 @@ export const images = {
   girlIdleFrames: emptyFrames,
   girlWalkFrames: emptyFrames
 } 
+
+export const player: Player = { 
+  type: PLAYER_THING, x: 0, y: 0, image: ( undefined as unknown as Anim ) , 
+  anim: 'idle',
+  speed: 0,
+  acceleration: 0,
+  direction: 1,
+  intersects: 1
+}

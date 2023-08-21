@@ -1,10 +1,14 @@
-import { ANIM_THING, STATIC_THING, TILE_BOTTOM, TILE_CENTERED } from './const.js'
+import { 
+  ANIM_THING, STATIC_THING, TILE_BOTTOM, TILE_CENTERED 
+} from './const.js'
+import { createMountains } from './draw/mountains.js'
+import { createSky } from './draw/sky.js'
+
 import { resize } from './host.js'
 import { keyDown, keyUp } from './io.js'
 import { loadImage, imageToFrames } from './lib/image.js'
-import { images, things } from './state.js'
+import { images, player, things } from './state.js'
 import { tick } from './tick.js'
-import { AnimThing } from './types.js'
 
 const start = async () => {
   const treeImage = await loadImage('tree-100-100.png')
@@ -13,20 +17,21 @@ const start = async () => {
   const girlIdleImage = await loadImage( 'girl-idle.png')
   const girlWalkImage = await loadImage( 'girl-walk.png')
 
-  images.skyImage = await loadImage('sky-800-300.png')
-  images.mountainImage = await loadImage('mountain-800-300.png')
+  //images.skyImage = await loadImage('sky-800-300.png')
+  images.skyImage = createSky( 800, 300 )
+  //images.mountainImage = await loadImage('mountain-800-300.png')
+  images.mountainImage = createMountains( 800, 300 )
+
   images.groundImage = await loadImage('ground-64-32.png')
   images.girlIdleFrames = imageToFrames(girlIdleImage, 4)
   images.girlWalkFrames = imageToFrames(girlWalkImage, 6)
  
   const girlAnim = {
     idle: { frames: images.girlIdleFrames, frame: 0, duration: 1000 },
-    walk: { frames: images.girlWalkFrames, frame: 0, duration: 250 }
+    walk: { frames: images.girlWalkFrames, frame: 0, duration: 500 }
   }
 
-  const player: AnimThing = { 
-    type: ANIM_THING, x: 0, y: 0, image: girlAnim, anim: 'idle' 
-  }
+  player.image = girlAnim
 
   things.push(
     // x and y are offsets from it's tiling position eg center of world or center+bottom of screen etc

@@ -1,0 +1,4 @@
+import { Point } from '../types.js'
+
+export const intPoint = (x: number, y: number): Point => 
+  ({ x: x | 0, y: y | 0 })
