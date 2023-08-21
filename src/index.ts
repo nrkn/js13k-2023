@@ -38,7 +38,7 @@ const start = async () => {
     { type: STATIC_THING, x: 0, y: 0, image: images.skyImage, moveSpeed: 0.5, tiling: TILE_CENTERED },
     { type: STATIC_THING, x: 0, y: 0, image: images.mountainImage, moveSpeed: 0.8, tiling: TILE_CENTERED },
 
-    { type: STATIC_THING, x: -10000, y: 0, image: gateImage, blocks: 1 },
+    { type: STATIC_THING, x: -2500, y: 0, image: gateImage, blocks: 1 },
     { type: STATIC_THING,x: -1200, y: 0, image: treeImage }, 
 
     { type: ANIM_THING, x: 100, y: 0, image: girlAnim, anim: 'idle', direction: -1 },
@@ -47,7 +47,7 @@ const start = async () => {
     { type: STATIC_THING, x: 200, y: 0, image: treeImage }, 
     { type: STATIC_THING, x: 1400, y: 0, image: treeImage },
 
-    { type: STATIC_THING, x: 10000, y: 0, image: gateImage, blocks: 1 },
+    { type: STATIC_THING, x: 2500, y: 0, image: gateImage, blocks: 1 },
 
     // ground
     { type: STATIC_THING, x: 0, y: 0, image: images.groundImage, moveSpeed: 1, tiling: TILE_BOTTOM },

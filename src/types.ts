@@ -7,11 +7,14 @@ export type Point = {
   y: number
 }
 
-// ok let's try typing things
+
 export type AnimState = { 
   frames: ImageSource[] 
   frame: number
-  duration: number // locked to one duration for every frame - consider making frames an array of [ ImageSource, duration ]
+  duration: number 
+  // locked to one duration for every frame - consider making frames an 
+  // array of [ ImageSource, duration ] - or we could make duration 
+  // number|number[] - length doesn't have to match frames, we can % it
 }
 
 export type Anim = Record<string,AnimState>

@@ -1,4 +1,4 @@
-export const ACCELERATION = 0.5
+export const ACCELERATION = 0.125
 export const FRICTION = 0.95
 
 export const vmin = 160
