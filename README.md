@@ -54,3 +54,6 @@ Generate player sprites! Idle and walk
 Used: 6341B
 Remaining: 6971B
 
+Removed all images (drawing procedurally now)
+Used: 4392B
+Remaining: 8919B

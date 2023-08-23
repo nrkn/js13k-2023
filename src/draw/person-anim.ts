@@ -9,6 +9,7 @@ const armFrontColor = '#0043e6'
 const torsoColor = 'red'
 const legFrontColor = '#f2de00'
 const legBackColor= '#008a31'
+const headColor = 'darkred'
 
 export const drawPersonAnim = ( data: Parsed ) => {
   const { width, height } = data.bg
@@ -69,6 +70,26 @@ export const drawPersonAnim = ( data: Parsed ) => {
     )
 
     for( const { x, y } of tpoints ) {
+      frameCtx.fillRect( x, y, 1, 1 )
+    }
+
+    // draw head - it's generated from torso - it is half the height and width,
+    // centered, and sits on top
+    const headWidth = torso.width / 2
+    const headHeight = torso.height / 2
+    const headX = torso.x + ( torso.width / 2 ) - ( headWidth / 2 )
+    const headY = torso.y - headHeight - 1
+    
+    frameCtx.fillStyle = headColor
+
+    const hpoints = quadFill(
+      { x: headX, y: headY },
+      { x: headX + headWidth, y: headY },
+      { x: headX + headWidth, y: headY + headHeight },
+      { x: headX, y: headY + headHeight }
+    )
+
+    for( const { x, y } of hpoints ) {
       frameCtx.fillRect( x, y, 1, 1 )
     }
 
