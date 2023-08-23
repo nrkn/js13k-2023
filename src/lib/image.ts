@@ -31,3 +31,4 @@ export const loadImage = (src: string) => new Promise<HTMLImageElement>(
     img.onerror = reject
   }
 )
+

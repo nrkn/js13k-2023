@@ -1,21 +1,37 @@
 import { 
   ANIM_THING, STATIC_THING, TILE_BOTTOM, TILE_CENTERED 
 } from './const.js'
+import { idleData } from './data/idle-data.js'
+import { walkData } from './data/walk-data.js'
 import { createMountains } from './draw/mountains.js'
 import { createSky } from './draw/sky.js'
+import { drawPersonAnim } from './draw/person-anim.js'
 
 import { resize } from './host.js'
 import { keyDown, keyUp } from './io.js'
-import { loadImage, imageToFrames } from './lib/image.js'
+import { loadImage } from './lib/image.js'
 import { images, player, things } from './state.js'
 import { tick } from './tick.js'
 
 const start = async () => {
+  // const walkData = parseSvg()
+
+  // console.log( walkData )  
+
+  const genWalkFrames = drawPersonAnim( walkData )
+
+  //const idleData = parseSvg( idleSvg )
+
+  //console.log( idleData )
+
+  const genIdleFrames = drawPersonAnim( idleData )
+
   const treeImage = await loadImage('tree-100-100.png')
   const tree2Image = await loadImage('tree2-100-100.png')
   const gateImage = await loadImage('gate-32-64.png')
-  const girlIdleImage = await loadImage( 'girl-idle.png')
-  const girlWalkImage = await loadImage( 'girl-walk.png')
+  
+
+  
 
   //images.skyImage = await loadImage('sky-800-300.png')
   images.skyImage = createSky( 800, 300 )
@@ -23,12 +39,13 @@ const start = async () => {
   images.mountainImage = createMountains( 800, 300 )
 
   images.groundImage = await loadImage('ground-64-32.png')
-  images.girlIdleFrames = imageToFrames(girlIdleImage, 4)
-  images.girlWalkFrames = imageToFrames(girlWalkImage, 6)
+  //images.girlWalkFrames = imageToFrames(girlWalkImage, 6)
  
   const girlAnim = {
-    idle: { frames: images.girlIdleFrames, frame: 0, duration: 1000 },
-    walk: { frames: images.girlWalkFrames, frame: 0, duration: 500 }
+    //idle: { frames: images.girlIdleFrames, frame: 0, duration: 1000 },
+    idle: genIdleFrames,
+    //walk: { frames: images.girlWalkFrames, frame: 0, duration: 500 }
+    walk: genWalkFrames
   }
 
   player.image = girlAnim
@@ -63,3 +80,5 @@ const start = async () => {
 }
 
 start().catch(console.error)
+
+

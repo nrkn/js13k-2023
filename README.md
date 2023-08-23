@@ -49,3 +49,8 @@ Remaining: 5339B
 Draw sky and mountains, ground and player, movement, some drawing stuff etc
 Used: 6484B
 Remaining: 6828B
+
+Generate player sprites! Idle and walk
+Used: 6341B
+Remaining: 6971B
+
