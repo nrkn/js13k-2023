@@ -79,8 +79,7 @@ export const draw = _t => {
   }
 
   ctx.fillStyle = 'white'
-  ctx.font = '12px monospace'
-  ctx.fillText(`x: ${player.x.toFixed(2)}`, 10, 20)
-  ctx.fillText(`speed: ${player.speed.toFixed(2)}`, 10, 40)
-  ctx.fillText(`accel: ${player.acceleration.toFixed(2)}`, 10, 60)
+  ctx.font = '10px monospace'
+  ctx.fillText(`x: ${player.x.toFixed(2)}`, 4, 12 )
+  ctx.fillText(`speed: ${Math.abs(player.speed).toFixed(2)}`, 4, 24 )
 }

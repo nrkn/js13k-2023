@@ -13,9 +13,9 @@ import {
   GANIM_HIP_BACK, GANIM_KNEE_BACK, GANIM_ANKLE_BACK
 } from '../data/types.js'
 
-import { bresenhamLine } from '../lib/bresenham.js'
-import { AnimState, Point } from '../types.js'
-import { interpolateColor } from './color.js'
+import { bresenhamLineFlatPoints } from '../lib/bresenham.js'
+import { AnimState } from '../types.js'
+import { interpolateRgb, rgbToHexColor } from './color.js'
 
 const _neckHeight = 4 // we may make this a parameter later
 
@@ -29,19 +29,22 @@ const createFrameCanvas = (
   return frameCanvas
 }
 
-type DrawnLimb = {
-  points: Point[]
-  mid: string
-}
+type DrawnLimb = [
+  points: number[],
+  mid: [number, number, number]
+]
+
+const L_POINTS = 0
+const L_MID = 1
 
 const _drawLimb = (
-  fromColor: string, toColor: string,
+  fromColor: [number, number, number], toColor: [number, number, number],
   x1: number, y1: number, x2: number, y2: number
 ): DrawnLimb => {
-  const points = bresenhamLine(x1, y1, x2, y2)
-  const mid = interpolateColor(fromColor, toColor)
+  const points = bresenhamLineFlatPoints(x1, y1, x2, y2)
+  const mid = interpolateRgb(fromColor, toColor)
 
-  return { points, mid }
+  return [points, mid]
 }
 
 const drawLimb = (
@@ -84,12 +87,12 @@ const drawInferredLines = (
   ) / 2
 
   const spine = _drawLimb(
-    shoulder.mid, hip.mid,
+    shoulder[L_MID], hip[L_MID],
     spineX1, spineY1, spineX2, spineY2
   )
 
   const neck = _drawLimb(
-    shoulder.mid, spine.mid,
+    shoulder[L_MID], spine[L_MID],
     spineX1, spineY1,
     // up 4px
     spineX1, spineY1 - neckHeight
@@ -101,9 +104,12 @@ const drawInferredLines = (
 const renderLimb = (
   frameCtx: CanvasRenderingContext2D, limb: DrawnLimb
 ) => {
-  frameCtx.fillStyle = limb.mid
+  frameCtx.fillStyle = rgbToHexColor(limb[L_MID])
 
-  for (const { x, y } of limb.points) {
+  for (let i = 0; i < limb[L_POINTS].length; i += 2) {
+    const x = limb[L_POINTS][i]
+    const y = limb[L_POINTS][i + 1]
+
     frameCtx.fillRect(x, y, 1, 1)
   }
 }
@@ -142,7 +148,7 @@ const drawPoints = (frameCtx: CanvasRenderingContext2D, frame: GAnimFrame) => {
     const x = frame[j * 2]
     const y = frame[j * 2 + 1]
 
-    frameCtx.fillStyle = color
+    frameCtx.fillStyle = rgbToHexColor(color)
     frameCtx.fillRect(x, y, 1, 1)
   }
 }

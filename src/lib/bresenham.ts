@@ -2,7 +2,7 @@ import { Point } from '../types.js'
 import { intPoint } from './point.js'
 
 export const bresenhamLine = (
-  x1: number, y1: number, 
+  x1: number, y1: number,
   x2: number, y2: number
 ): Point[] => {
   x1 |= 0
@@ -41,11 +41,52 @@ export const bresenhamLine = (
   return points
 }
 
+
+export const bresenhamLineFlatPoints = (
+  x1: number, y1: number,
+  x2: number, y2: number
+): number[] => {
+  x1 |= 0
+  y1 |= 0
+  x2 |= 0
+  y2 |= 0
+
+  const points: number[] = []
+
+  const dx = Math.abs(x2 - x1)
+  const dy = Math.abs(y2 - y1)
+
+  const sx = x1 < x2 ? 1 : -1
+  const sy = y1 < y2 ? 1 : -1
+
+  let err = dx - dy
+
+  while (true) {
+    points.push(x1, y1)
+
+    if (x1 === x2 && y1 === y2) break
+
+    const e2 = 2 * err
+
+    if (e2 > -dy) {
+      err -= dy
+      x1 += sx
+    }
+
+    if (e2 < dx) {
+      err += dx
+      y1 += sy
+    }
+  }
+
+  return points
+}
+
 export const strokeLineCorners = (
   x1: number, y1: number,
   x2: number, y2: number,
   width: number
-): [ Point, Point, Point, Point ] => {
+): [Point, Point, Point, Point] => {
   x1 |= 0
   y1 |= 0
   x2 |= 0

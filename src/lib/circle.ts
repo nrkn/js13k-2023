@@ -55,6 +55,27 @@ export const drawEllipse = (
   return points
 }
 
+// export const fillEllipse = (
+//   cx: number, cy: number, rx: number, ry: number
+// ): Point[] => {
+//   cx |= 0
+//   cy |= 0
+//   rx |= 0
+//   ry |= 0
+
+//   const points: Point[] = []
+
+//   for (let x = -rx; x <= rx; x++) {
+//     const yLimit = ry * Math.sqrt(1 - (x * x) / (rx * rx))
+
+//     for (let y = -yLimit; y <= yLimit; y++) {    
+//       points.push(intPoint(cx + x, cy + y))
+//     }
+//   }
+
+//   return points
+// }
+
 export const fillEllipse = (
   cx: number, cy: number, rx: number, ry: number
 ): Point[] => {
@@ -66,14 +87,18 @@ export const fillEllipse = (
   const points: Point[] = []
 
   for (let x = -rx; x <= rx; x++) {
-    const yLimit = ry * Math.sqrt(1 - (x * x) / (rx * rx));
+    let yLimit = Math.round(ry * Math.sqrt(1 - (x * x) / (rx * rx)))
 
-    for (let y = -yLimit; y <= yLimit; y++) {    
+    for (let y = -yLimit; y <= yLimit; y++) {  
+      // Avoid drawing the spiky pixels
+      if ((y === yLimit || y === -yLimit) && Math.abs(yLimit - y) < 0.5) {
+        continue
+      }  
       points.push(intPoint(cx + x, cy + y))
     }
   }
 
-  return points;
+  return points
 }
 
 export const drawCircle = (

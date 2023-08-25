@@ -19,5 +19,9 @@
   "bugs": {
     "url": "https://github.com/nrkn/js13k-2023/issues"
   },
-  "homepage": "https://github.com/nrkn/js13k-2023#readme"
+  "homepage": "https://github.com/nrkn/js13k-2023#readme",
+  "dependencies": {
+    "@rgba-image/png": "^0.1.1",
+    "@types/node": "^20.5.6"
+  }
 }

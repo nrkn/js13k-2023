@@ -1,29 +1,29 @@
-export const jointColors: string[] = [
+export const jointColors: [ number, number, number ][] = [
   // Shoulder Front
-  '#ff0000',  // Red
+  [ 0xff, 0x00, 0x00 ],  // Red
   // Elbow Front
-  '#ff7f00',  // Orange
+  [ 0xff, 0x7f, 0x00 ],  // Orange
   // Wrist Front
-  '#ffff00',  // Yellow
+  [ 0xff, 0xff, 0x00 ],  // Yellow
 
   // Shoulder Back
-  '#8b0000',  // Dark Red
+  [ 0x8b, 0x00, 0x00 ],  // Dark Red
   // Elbow Back
-  '#8b4500',  // Dark Orange
-  // Wrist Back  
-  '#8b8b00',  // Dark Yellow
+  [ 0x8b, 0x45, 0x00 ],  // Dark Orange
+  // Wrist Back
+  [ 0x8b, 0x8b, 0x00 ],  // Dark Yellow
 
   // Hip Front
-  '#00ff00',  // Green
+  [ 0x00, 0xff, 0x00 ],  // Green
   // Knee Front
-  '#0000ff',  // Blue
+  [ 0x00, 0x00, 0xff ],  // Blue
   // Ankle Front
-  '#8a2be2',  // Purple
+  [ 0x8a, 0x2b, 0xe2 ],  // Purple
 
   // Hip Back
-  '#006400',  // Dark Green
+  [ 0x00, 0x64, 0x00 ],  // Dark Green
   // Knee Back
-  '#00008b',  // Dark Blue
+  [ 0x00, 0x00, 0x8b ],  // Dark Blue
   // Ankle Back
-  '#551a8b'   // Dark Purple
+  [ 0x55, 0x1a, 0x8b ]   // Dark Purple 
 ]

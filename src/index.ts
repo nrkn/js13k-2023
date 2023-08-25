@@ -2,7 +2,7 @@ import {
   ANIM_THING, GROUND_HEIGHT, STATIC_THING, TILE_BOTTOM, TILE_CENTERED 
 } from './const.js'
 
-import { idleData } from './data/idle-data.js'
+import { idleData, idleData2 } from './data/idle-data.js'
 import { walkData } from './data/walk-data.js'
 import { createMountains } from './draw/mountains.js'
 import { createSky } from './draw/sky.js'
@@ -19,7 +19,7 @@ import { drawPersonAnim } from './draw/person-anim.js'
 
 const start = async () => {
   const genWalkFrames = drawPersonAnim( walkData )
-  const genIdleFrames = drawPersonAnim( idleData )
+  const genIdleFrames = drawPersonAnim( idleData2 )
 
   const treeImage = createTree( 100, 100 )
   const tree2Image = createTree( 100, 100, '#225027', '#422429' )
