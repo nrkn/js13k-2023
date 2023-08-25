@@ -1,122 +1,52 @@
-export const idleData = {
-  "bg": {
-    "x": 220,
-    "y": 183,
-    "width": 40,
-    "height": 31
-  },
-  "frames": [
-    {
-      "shoulderBack": {
-        "x": 12.5,
-        "y": 15.5
-      },
-      "elbowBack": {
-        "x": 15.5,
-        "y": 17.5
-      },
-      "handBack": {
-        "x": 13,
-        "y": 20
-      },
-      "hipBack": {
-        "x": 11,
-        "y": 24
-      },
-      "kneeBack": {
-        "x": 12.5,
-        "y": 26.5
-      },
-      "heelBack": {
-        "x": 11.5,
-        "y": 29.5
-      },
-      "torso": {
-        "x": 6,
-        "y": 15,
-        "width": 7,
-        "height": 9
-      },
-      "shoulderFront": {
-        "x": 5.5,
-        "y": 15.5
-      },
-      "elbowFront": {
-        "x": 1.5,
-        "y": 17.5
-      },
-      "handFront": {
-        "x": 5,
-        "y": 20
-      },
-      "hipFront": {
-        "x": 6,
-        "y": 24
-      },
-      "kneeFront": {
-        "x": 4.5,
-        "y": 25.5
-      },
-      "heelFront": {
-        "x": 4.5,
-        "y": 29.5
-      }
-    },
-    {
-      "shoulderBack": {
-        "x": 12.5,
-        "y": 16.5
-      },
-      "elbowBack": {
-        "x": 15.5,
-        "y": 18.5
-      },
-      "handBack": {
-        "x": 13,
-        "y": 21
-      },
-      "hipBack": {
-        "x": 11,
-        "y": 25
-      },
-      "kneeBack": {
-        "x": 12.5,
-        "y": 27.5
-      },
-      "heelBack": {
-        "x": 11.5,
-        "y": 29.5
-      },
-      "torso": {
-        "x": 6,
-        "y": 16,
-        "width": 7,
-        "height": 9
-      },
-      "shoulderFront": {
-        "x": 5.5,
-        "y": 16.5
-      },
-      "elbowFront": {
-        "x": 1.5,
-        "y": 18.5
-      },
-      "handFront": {
-        "x": 5,
-        "y": 21
-      },
-      "hipFront": {
-        "x": 6,
-        "y": 25
-      },
-      "kneeFront": {
-        "x": 4.5,
-        "y": 26.5
-      },
-      "heelFront": {
-        "x": 4.5,
-        "y": 29.5
-      }
-    }
+import { GAnim } from './types.js'
+
+export const idleData: GAnim = [
+  [40, 31],
+  [
+    // frame 0
+    [
+      // upper front
+      5, 15,  // shoulder
+      1, 17,  // elbow
+      5, 20,  // wrist
+
+      // upper back
+      12, 15,  // shoulder
+      15, 17,  // elbow
+      13, 20,  // wrist
+
+      // lower front
+      6, 24,  // hip
+      4, 25,  // knee
+      4, 29,  // ankle
+
+      // lower back
+      11, 24,  // hip
+      12, 26,  // knee
+      11, 29   // ankle
+    ],
+
+    // frame 1
+    [
+      // upper front
+      5, 16,  // shoulder
+      1, 18,  // elbow
+      5, 21,  // wrist
+
+      // upper back
+      12, 16,  // shoulder
+      15, 18,  // elbow
+      13, 21,  // wrist
+
+      // lower front
+      6, 25,  // hip
+      4, 26,  // knee
+      4, 29,  // ankle
+
+      // lower back
+      11, 25,  // hip
+      12, 27,  // knee
+      11, 29   // ankle
+    ]
   ]
-}
+]

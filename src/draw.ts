@@ -1,10 +1,11 @@
 import { getImageSource } from './anim.js'
 import {
+  GROUND_HEIGHT,
   PLAYER_THING, TILE_BOTTOM, TILE_CENTERED
 } from './const.js'
 
 import { canvas, ctx } from './host.js'
-import { images, things, player } from './state.js'
+import { things, player } from './state.js'
 
 export const draw = _t => {
   canvas.width = canvas.width
@@ -32,12 +33,12 @@ export const draw = _t => {
       tDrawY = cy - image.height / 2 + t.y
     } else {
       // default case
-      tDrawY = canvas.height - image.height - images.groundImage.height + t.y
+      tDrawY = canvas.height - image.height - GROUND_HEIGHT + t.y
     }
 
     if (t.type === PLAYER_THING) {
       tDrawX = cx - image.width / 2
-      tDrawY = canvas.height - image.height - images.groundImage.height
+      tDrawY = canvas.height - image.height - GROUND_HEIGHT
     }
 
     const drawThingImage = (x: number, y: number) => {

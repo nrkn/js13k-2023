@@ -32,3 +32,27 @@ export const loadImage = (src: string) => new Promise<HTMLImageElement>(
   }
 )
 
+export const framesToCanvas = ( frames: ImageSource[] ) => {
+  let width = 0
+  let height = 0 
+
+  for( const frame of frames ){
+    width += frame.width
+    height = Math.max( height, frame.height )
+  }
+
+  const canvas = document.createElement('canvas')
+  canvas.width = width
+  canvas.height = height
+
+  const ctx = canvas.getContext('2d')!
+
+  let x = 0
+
+  for( const frame of frames ){
+    ctx.drawImage( frame, x, 0 )
+    x += frame.width
+  }
+
+  return canvas
+}

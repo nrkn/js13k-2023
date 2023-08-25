@@ -33,7 +33,6 @@ export const createGate = (
     x1 += Math.random() * 5 - 3
     x2 += Math.random() * 5 - 3
     y1 += Math.random() * 3
-    y2 -= Math.random() * 3
 
     verts.push({ x1: x1, y1, x2: x1, y2 })
   }
@@ -57,7 +56,7 @@ export const createGate = (
   }
 
   const drawLine = (line: Line) => {
-    const corners = strokeLineCorners(line.x1, line.y1, line.x2, line.y2, 3 )
+    const corners = strokeLineCorners(line.x1, line.y1, line.x2, line.y2, 2 )
     const pts = quadFill(...corners)
 
     for (const { x, y } of pts) {

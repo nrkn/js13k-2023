@@ -1,4 +1,4 @@
-import { quadFill } from '../lib/triangle.js'
+import { quadFill, triangleFill } from '../lib/triangle.js'
 
 export const createMountains = (
   width = 800, height = 300,
@@ -62,3 +62,105 @@ export const createMountains = (
 
   return canvas;
 }
+
+const fade = ( t: number ) => t * t * t * ( t * ( t * 6 - 15 ) + 10 )
+
+const lerp = ( a: number, b: number, x: number ) => a + x * ( b - a )
+
+const grad = ( hash: number, x: number ) => {
+  const h = hash & 15
+  const grad = 1 + ( h & 7 ) // Gradient value is one of 1, 2, ..., 8
+  return grad * x // Compute the dot product
+}
+
+// Permutation table. This is just a random jumble of all 8-bit values,
+// repeated twice to avoid wrapping the index at each each step.
+const permutation = [ ...Array( 256 ) ].map( ( _, i ) => i )
+permutation.sort( () => Math.random() - 0.5 )
+permutation.push( ...permutation )
+
+const perlin = ( x: number ) => {
+  const X = x & 255
+  x -= Math.floor( x )
+  const u = fade( x )
+  
+  // Hash lookup
+  const a = permutation[ X ]
+  const b = permutation[ X + 1 ]
+  
+  return lerp( grad( a, x ), grad( b, x - 1 ), u )
+}
+
+const generateMountainRange = ( 
+  width: number, height: number, 
+  baseHeight: number, maxHeight: number, frequency: number 
+) => {
+  const mountainPoints: number[] = []
+
+  for ( let x = 0; x < width; x++ ) {
+    const noiseValue = perlin( x * frequency )
+    const mountainPoint = baseHeight + noiseValue * maxHeight
+    mountainPoints.push( mountainPoint )
+  }
+  
+  return mountainPoints
+}
+
+/*
+import random
+import math
+from typing import List, Tuple
+
+def fade(t: float) -> float:
+    """Fade function as defined by Ken Perlin."""
+    return t * t * t * (t * (t * 6 - 15) + 10)
+
+def lerp(a: float, b: float, x: float) -> float:
+    """Linear interpolation."""
+    return a + x * (b - a)
+
+def grad(hash_: int, x: float) -> float:
+    """Gradiant function."""
+    h = hash_ & 15
+    grad = 1 + (h & 7)  # Gradient value is one of 1, 2, ..., 8
+    return (grad * x)  # Compute the dot product
+
+# Permutation table. This is just a random jumble of all 8-bit values,
+# repeated twice to avoid wrapping the index at each each step.
+permutation = [i for i in range(256)]
+random.shuffle(permutation)
+permutation += permutation
+
+def perlin(x: float) -> float:
+    """Simple Perlin noise function in 1D."""
+    X = int(x) & 255
+    x -= math.floor(x)
+    u = fade(x)
+    
+    # Hash lookup
+    a = permutation[X]
+    b = permutation[X + 1]
+    
+    return lerp(grad(a, x), grad(b, x - 1), u)
+
+def generate_mountain_range(width: int, height: int, base_height: float, max_height: float, frequency: float) -> List[int]:
+    """Generate a mountain range using Perlin noise."""
+    mountain_points = []
+    for x in range(width):
+        noise_value = perlin(x * frequency)
+        mountain_point = int(base_height + noise_value * max_height)
+        mountain_points.append(mountain_point)
+    return mountain_points
+
+# Parameters
+width = 800
+height = 300
+base_height = height * 0.5
+max_height = height * 0.3
+frequency = 0.02
+
+# Generate the mountain range
+mountain_range = generate_mountain_range(width, height, base_height, max_height, frequency)
+mountain_range[:10]  # Display the first 10 points for a quick check
+
+*/

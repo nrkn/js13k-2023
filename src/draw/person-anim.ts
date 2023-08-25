@@ -1,105 +1,200 @@
-import { strokeLineCorners } from '../lib/bresenham.js'
-import { fillCircle } from '../lib/circle.js'
-import { quadFill } from '../lib/triangle.js'
-import { Parsed } from '../temp/svg-to-data.js'
+import { jointColors } from '../data/colors.js'
+
+import {
+  GAnim, GAnimFrame,
+  GANIM_BG, GANIM_FRAMES,
+
+  GANIM_SHOULDER_FRONT, GANIM_ELBOW_FRONT, GANIM_WRIST_FRONT,
+
+  GANIM_SHOULDER_BACK, GANIM_ELBOW_BACK, GANIM_WRIST_BACK,
+
+  GANIM_HIP_FRONT, GANIM_KNEE_FRONT, GANIM_ANKLE_FRONT,
+
+  GANIM_HIP_BACK, GANIM_KNEE_BACK, GANIM_ANKLE_BACK
+} from '../data/types.js'
+
+import { bresenhamLine } from '../lib/bresenham.js'
 import { AnimState, Point } from '../types.js'
+import { interpolateColor } from './color.js'
 
-const armBackColor = '#002a60'
-const armFrontColor = '#0043e6'
-const torsoColor = 'red'
-const legFrontColor = '#f2de00'
-const legBackColor= '#008a31'
-const headColor = 'darkred'
+const _neckHeight = 4 // we may make this a parameter later
 
-export const drawPersonAnim = ( data: Parsed ) => {
-  const { width, height } = data.bg
+const createFrameCanvas = (
+  width: number, height: number
+): HTMLCanvasElement => {
+  const frameCanvas = document.createElement('canvas')
+  frameCanvas.width = width
+  frameCanvas.height = height
 
-  const frameCount = data.frames.length
+  return frameCanvas
+}
+
+type DrawnLimb = {
+  points: Point[]
+  mid: string
+}
+
+const _drawLimb = (
+  fromColor: string, toColor: string,
+  x1: number, y1: number, x2: number, y2: number
+): DrawnLimb => {
+  const points = bresenhamLine(x1, y1, x2, y2)
+  const mid = interpolateColor(fromColor, toColor)
+
+  return { points, mid }
+}
+
+const drawLimb = (
+  frame: GAnimFrame, fromIndex: number, toIndex: number
+) => {
+  const x1 = frame[fromIndex * 2]
+  const y1 = frame[fromIndex * 2 + 1]
+  const x2 = frame[toIndex * 2]
+  const y2 = frame[toIndex * 2 + 1]
+
+  const fromColor = jointColors[fromIndex]
+  const toColor = jointColors[toIndex]
+
+  return _drawLimb(
+    fromColor, toColor,
+    x1, y1, x2, y2
+  )
+}
+
+const drawInferredLines = (
+  frame: GAnimFrame, neckHeight: number
+): DrawnLimb[] => {
+  const shoulder = drawLimb(frame, GANIM_SHOULDER_FRONT, GANIM_SHOULDER_BACK)
+  const hip = drawLimb(frame, GANIM_HIP_FRONT, GANIM_HIP_BACK)
+
+  const spineX1 = (
+    frame[GANIM_SHOULDER_FRONT * 2] + frame[GANIM_SHOULDER_BACK * 2]
+  ) / 2
+
+  const spineY1 = (
+    frame[GANIM_SHOULDER_FRONT * 2 + 1] + frame[GANIM_SHOULDER_BACK * 2 + 1]
+  ) / 2
+
+  const spineX2 = (
+    frame[GANIM_HIP_FRONT * 2] + frame[GANIM_HIP_BACK * 2]
+  ) / 2
+
+  const spineY2 = (
+    frame[GANIM_HIP_FRONT * 2 + 1] + frame[GANIM_HIP_BACK * 2 + 1]
+  ) / 2
+
+  const spine = _drawLimb(
+    shoulder.mid, hip.mid,
+    spineX1, spineY1, spineX2, spineY2
+  )
+
+  const neck = _drawLimb(
+    shoulder.mid, spine.mid,
+    spineX1, spineY1,
+    // up 4px
+    spineX1, spineY1 - neckHeight
+  )
+
+  return [shoulder, hip, spine, neck]
+}
+
+const renderLimb = (
+  frameCtx: CanvasRenderingContext2D, limb: DrawnLimb
+) => {
+  frameCtx.fillStyle = limb.mid
+
+  for (const { x, y } of limb.points) {
+    frameCtx.fillRect(x, y, 1, 1)
+  }
+}
+
+const drawBack = (frameCtx: CanvasRenderingContext2D, frame: GAnimFrame) => {
+  renderLimb(frameCtx, drawLimb(frame, GANIM_SHOULDER_BACK, GANIM_ELBOW_BACK))
+  renderLimb(frameCtx, drawLimb(frame, GANIM_ELBOW_BACK, GANIM_WRIST_BACK))
+  renderLimb(frameCtx, drawLimb(frame, GANIM_HIP_BACK, GANIM_KNEE_BACK))
+  renderLimb(frameCtx, drawLimb(frame, GANIM_KNEE_BACK, GANIM_ANKLE_BACK))
+}
+
+const drawInferred = (
+  frameCtx: CanvasRenderingContext2D, frame: GAnimFrame, neckHeight: number
+) => {
+  // inferred
+  const inferred = drawInferredLines(frame, neckHeight)
+
+  for (const limb of inferred) {
+    renderLimb(frameCtx, limb)
+  }
+}
+
+const drawFront = (frameCtx: CanvasRenderingContext2D, frame: GAnimFrame) => {
+  renderLimb(frameCtx, drawLimb(frame, GANIM_SHOULDER_FRONT, GANIM_ELBOW_FRONT))
+  renderLimb(frameCtx, drawLimb(frame, GANIM_ELBOW_FRONT, GANIM_WRIST_FRONT))
+  renderLimb(frameCtx, drawLimb(frame, GANIM_HIP_FRONT, GANIM_KNEE_FRONT))
+  renderLimb(frameCtx, drawLimb(frame, GANIM_KNEE_FRONT, GANIM_ANKLE_FRONT))
+}
+
+const drawPoints = (frameCtx: CanvasRenderingContext2D, frame: GAnimFrame) => {
+  const jointColorsArrLen = jointColors.length
+
+  for (let j = 0; j < jointColorsArrLen; j++) {
+    const color = jointColors[j]
+
+    const x = frame[j * 2]
+    const y = frame[j * 2 + 1]
+
+    frameCtx.fillStyle = color
+    frameCtx.fillRect(x, y, 1, 1)
+  }
+}
+
+const drawLines = (
+  frameCtx: CanvasRenderingContext2D,
+  frame: GAnimFrame,
+  isDrawInferred: boolean,
+  isDrawBack: boolean,
+  isDrawFront: boolean
+) => {
+  // back
+  if (isDrawBack) drawBack(frameCtx, frame)
+  // inferred
+  if (isDrawInferred) drawInferred(frameCtx, frame, _neckHeight)
+  // front
+  if (isDrawFront) drawFront(frameCtx, frame)
+}
+
+export const drawPersonAnim = (
+  data: GAnim,
+  isDrawLines = true,
+  isDrawPoints = true,
+  isDrawInferred = true,
+  isDrawBack = true,
+  isDrawFront = true
+) => {
+  const bg = data[GANIM_BG]
+  const animFrames = data[GANIM_FRAMES]
+
+  const [width, height] = bg
+
+  const frameCount = animFrames.length
   const frameWidth = width / frameCount
 
   const frames: HTMLCanvasElement[] = []
-  // to draw a line, get the corners with strokeLineCorners and a width of 2
-  // and then fill with quadFill 
-  // for leg, draw a line from hip to knee, knee to heel
-  // for arm, draw a line from shoulder to elbow, elbow to hand
-  // draw back, then torso, then front
-  for ( let i = 0; i < frameCount; i++ ) {
-    const frameCanvas = document.createElement( 'canvas' )
-    frameCanvas.width = frameWidth
-    frameCanvas.height = height
 
-    const frameCtx = frameCanvas.getContext( '2d' )!
+  for (let i = 0; i < frameCount; i++) {
+    const frameCanvas = createFrameCanvas(frameWidth, height)
+    const frameCtx = frameCanvas.getContext('2d')!
+    const frame = animFrames[i]
 
-    const frame = data.frames[ i ]
-
-    const {
-      shoulderBack, elbowBack, handBack, hipBack, kneeBack, heelBack,
-      shoulderFront, elbowFront, handFront, hipFront, kneeFront, heelFront, 
-      torso
-    } = frame
-
-    const drawLimb = ( 
-      color: string, from: Point, to: Point, width: number 
-    ) => {
-      const aPoints = fillCircle( from.x, from.y, width )
-      const bPoints = fillCircle( to.x, to.y, width )
-
-      const corners = strokeLineCorners( from.x, from.y, to.x, to.y, width )
-      const points = [ ...aPoints, ...bPoints, ...quadFill( ...corners ) ]
-
-      frameCtx.fillStyle = color
-
-      for( const { x, y } of points ) {
-        frameCtx.fillRect( x, y, 1, 1 )
-      }
+    if (isDrawLines) {
+      drawLines(frameCtx, frame, isDrawInferred, isDrawBack, isDrawFront)
     }
 
-    // draw back
-    drawLimb( armBackColor, shoulderBack, elbowBack, 2 )
-    drawLimb( armBackColor, elbowBack, handBack, 2 )
-    drawLimb( legBackColor, hipBack, kneeBack, 2 )
-    drawLimb( legBackColor, kneeBack, heelBack, 2 )
-
-    // draw torso
-    frameCtx.fillStyle = torsoColor
-    const tpoints = quadFill(
-      { x: torso.x, y: torso.y },
-      { x: torso.x + torso.width, y: torso.y },
-      { x: torso.x + torso.width, y: torso.y + torso.height },
-      { x: torso.x, y: torso.y + torso.height }
-    )
-
-    for( const { x, y } of tpoints ) {
-      frameCtx.fillRect( x, y, 1, 1 )
+    // finally, draw a single pixel of each jointColor at the joint
+    if (isDrawPoints) {
+      drawPoints(frameCtx, frame)
     }
 
-    // draw head - it's generated from torso - it is half the height and width,
-    // centered, and sits on top
-    const headWidth = torso.width / 2
-    const headHeight = torso.height / 2
-    const headX = torso.x + ( torso.width / 2 ) - ( headWidth / 2 )
-    const headY = torso.y - headHeight - 1
-    
-    frameCtx.fillStyle = headColor
-
-    const hpoints = quadFill(
-      { x: headX, y: headY },
-      { x: headX + headWidth, y: headY },
-      { x: headX + headWidth, y: headY + headHeight },
-      { x: headX, y: headY + headHeight }
-    )
-
-    for( const { x, y } of hpoints ) {
-      frameCtx.fillRect( x, y, 1, 1 )
-    }
-
-    // draw front
-    drawLimb( armFrontColor, shoulderFront, elbowFront, 2 )
-    drawLimb( armFrontColor, elbowFront, handFront, 2 )
-    drawLimb( legFrontColor, hipFront, kneeFront, 2  )
-    drawLimb( legFrontColor, kneeFront, heelFront, 2 )
-
-    frames.push( frameCanvas )
+    frames.push(frameCanvas)
   }
 
   const animState: AnimState = {

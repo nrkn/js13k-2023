@@ -1,8 +1,9 @@
+import { GROUND_HEIGHT } from '../const.js'
 import { quadFill, triangleFill } from '../lib/triangle.js'
 
 export const createGround = (
   width = 64,
-  height = 16,
+  height = GROUND_HEIGHT,
   spikes = 8,
   grassColor = '#4f942d',
   dirtColor = '#874718',

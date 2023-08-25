@@ -1,4 +1,4 @@
-export const ACCELERATION = 0.125
+export const ACCELERATION = 0.175
 export const FRICTION = 0.95
 
 export const vmin = 160
@@ -10,3 +10,5 @@ export const PLAYER_THING = 2
 export const TILE_NONE = 0
 export const TILE_CENTERED = 1
 export const TILE_BOTTOM = 2
+
+export const GROUND_HEIGHT = 16
