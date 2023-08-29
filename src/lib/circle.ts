@@ -55,27 +55,6 @@ export const drawEllipse = (
   return points
 }
 
-// export const fillEllipse = (
-//   cx: number, cy: number, rx: number, ry: number
-// ): Point[] => {
-//   cx |= 0
-//   cy |= 0
-//   rx |= 0
-//   ry |= 0
-
-//   const points: Point[] = []
-
-//   for (let x = -rx; x <= rx; x++) {
-//     const yLimit = ry * Math.sqrt(1 - (x * x) / (rx * rx))
-
-//     for (let y = -yLimit; y <= yLimit; y++) {    
-//       points.push(intPoint(cx + x, cy + y))
-//     }
-//   }
-
-//   return points
-// }
-
 export const fillEllipse = (
   cx: number, cy: number, rx: number, ry: number
 ): Point[] => {

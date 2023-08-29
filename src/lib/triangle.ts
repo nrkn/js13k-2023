@@ -6,7 +6,7 @@ const area = (
 ) =>
   Math.abs((x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)))
 
-const pointInTriangle = (
+const pointInTriangleArea = (
   p: Point, a: Point, b: Point, c: Point
 ) => (
   area(a.x, a.y, b.x, b.y, c.x, c.y) ===
@@ -15,8 +15,29 @@ const pointInTriangle = (
   area(a.x, a.y, b.x, b.y, p.x, p.y)
 )
 
+const pointInTriangleBarycentric = (
+  p: Point, a: Point, b: Point, c: Point
+): boolean => {
+  const v0: Point = { x: c.x - a.x, y: c.y - a.y }
+  const v1: Point = { x: b.x - a.x, y: b.y - a.y }
+  const v2: Point = { x: p.x - a.x, y: p.y - a.y }
+
+  const dot00 = v0.x * v0.x + v0.y * v0.y
+  const dot01 = v0.x * v1.x + v0.y * v1.y
+  const dot02 = v0.x * v2.x + v0.y * v2.y
+  const dot11 = v1.x * v1.x + v1.y * v1.y
+  const dot12 = v1.x * v2.x + v1.y * v2.y
+
+  const invDenom = 1 / (dot00 * dot11 - dot01 * dot01)
+  const u = (dot11 * dot02 - dot01 * dot12) * invDenom
+  const v = (dot00 * dot12 - dot01 * dot02) * invDenom
+
+  return (u >= 0) && (v >= 0) && (u + v < 1)
+}
+
 export const triangleFill = (
-  a: Point, b: Point, c: Point
+  a: Point, b: Point, c: Point,
+  test = pointInTriangleArea
 ): Point[] => {
   a = intPoint(a.x, a.y)
   b = intPoint(b.x, b.y)
@@ -33,7 +54,7 @@ export const triangleFill = (
     for (let y = minY; y <= maxY; y++) {
       const p = { x, y }
 
-      if (pointInTriangle(p, a, b, c)) {
+      if (test(p, a, b, c)) {
         points.push({ x: x | 0, y: y | 0 })
       }
     }
